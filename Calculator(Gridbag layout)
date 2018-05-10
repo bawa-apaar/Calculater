@@ -1,0 +1,602 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+class GridBagTask implements ActionListener,MouseListener
+{
+	String str;
+	JFrame frame;
+	JPanel mainpanel,north,center,south;
+JButton b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,bdot,bplus,bminus,bmul,bdiv,bC,bCE,bback,bequals,bneg;
+	JLabel heading;
+	Font f1,bf,TF;
+		
+	JTextField tf;
+	BorderLayout bl;
+
+	double a=0,b=0,answer=0;
+	int operation=0;	
+
+	GridBagLayout gbl;
+	GridBagConstraints gbc; 
+	
+	GridBagTask()
+	{
+		//memory allocation
+		gbc=new  GridBagConstraints();
+		gbl=new GridBagLayout();
+
+		tf=new JTextField();
+		TF=new Font("tahoma",Font.BOLD,40);
+		tf.setFont(TF);
+		tf.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		tf.setEditable(false);
+		tf.setBackground(new Color(255,255,255));
+		tf.setBorder(BorderFactory.createLineBorder(new Color(0,0,0,0)));
+		frame=new JFrame("Calculator");
+		mainpanel=new JPanel();
+		north=new JPanel();
+		center=new JPanel();
+		south=new JPanel();
+	
+		bf=new Font("tahoma",Font.PLAIN,20);
+		b0=new JButton("0");
+		b0.setFont(bf);
+		bequals=new JButton("=");
+		bequals.setFont(bf);		
+		b1=new JButton("1");
+		b1.setFont(bf);
+		b2=new JButton("2");
+		b2.setFont(bf);
+		b3=new JButton("3");
+		b3.setFont(bf);
+		b4=new JButton("4");
+		b4.setFont(bf);
+		b5=new JButton("5");
+		b5.setFont(bf);		
+		b6=new JButton("6");
+		b6.setFont(bf);
+		b7=new JButton("7");
+		b7.setFont(bf);
+		b8=new JButton("8");
+		b8.setFont(bf);
+		b9=new JButton("9");
+		b9.setFont(bf);
+		bdot=new JButton(".");
+		bdot.setFont(bf);
+		bplus=new JButton("+");
+		bplus.setFont(bf);
+		bminus=new JButton("-");	
+		bminus.setFont(bf);
+		bmul=new JButton("*");
+		bmul.setFont(bf);		
+		bdiv=new JButton("/");
+		bdiv.setFont(bf);
+		bC=new JButton("C");
+		bC.setFont(bf);
+		bCE=new JButton("CE");
+		bCE.setFont(bf);
+		bback=new JButton("<");
+		bback.setFont(bf);
+		bneg=new JButton("neg");
+		bneg.setFont(bf);
+
+		removeBorder();
+			
+		heading=new JLabel("STANDARD");
+		f1=new Font("tahoma",Font.BOLD,20);
+		heading.setFont(f1);
+
+		bl=new BorderLayout();
+		
+		setBorderLayout();
+		
+		 
+        		addListener();
+		addMouseListener();
+
+		tf.setPreferredSize(new Dimension(350,220));	
+     		  
+       
+		north.setLayout(null);
+		heading.setBounds(20,10,200,30);
+
+		//set buttons on GridBagLayout in south panel
+		setButtons();
+		buttonColor();
+		
+		center.add(tf);
+		north.add(heading);
+		frame.add(mainpanel);
+		frame.setResizable(false);
+		frame.setSize(350,600);
+		frame.setVisible(true);
+		frame.setLocationRelativeTo(null);
+	}
+
+	void setButtons()
+	{
+		south.setLayout(gbl);
+		
+		gbc.weightx=0.3;	
+		gbc.weighty=0.6;	
+		gbc.ipadx=80;
+		gbc.ipady=36;
+
+		
+			
+		gbc.gridx=0;
+		gbc.gridy=0;
+		south.add(bCE,gbc);
+		gbc.ipadx=76;
+		gbc.gridx=1;
+		gbc.gridy=0;
+		south.add(bC,gbc);
+		
+		gbc.gridx=2;
+		gbc.gridy=0;
+		south.add(bback,gbc);
+		
+		gbc.gridx=3;
+		gbc.gridy=0;	
+		south.add(bdiv,gbc);
+		gbc.ipadx=93;
+		gbc.gridx=0;
+		gbc.gridy=1;
+		south.add(b7,gbc);
+		
+
+		gbc.ipadx=74;	
+		gbc.gridx=1;
+		gbc.gridy=1;
+		south.add(b8,gbc);
+		
+		gbc.gridx=2;
+		gbc.gridy=1;
+		south.add(b9,gbc);
+		
+		gbc.gridx=3;
+		gbc.gridy=1;	
+		south.add(bmul,gbc);
+
+		gbc.ipadx=93;	
+		gbc.gridx=0;
+		gbc.gridy=2;
+		south.add(b4,gbc);
+		
+		gbc.ipadx=74;
+		gbc.gridx=1;
+		gbc.gridy=2;
+		south.add(b5,gbc);
+		
+		gbc.gridx=2;
+		gbc.gridy=2;
+		south.add(b6,gbc);
+		
+		gbc.gridx=3;
+		gbc.gridy=2;	
+		south.add(bminus,gbc);
+		
+
+		gbc.ipadx=93;
+		gbc.gridx=0;
+		gbc.gridy=3;
+		south.add(b1,gbc);
+		
+		gbc.ipadx=74;
+		gbc.gridx=1;
+		gbc.gridy=3;
+		south.add(b2,gbc);
+		
+		gbc.gridx=2;
+		gbc.gridy=3;
+		south.add(b3,gbc);
+		
+		gbc.gridx=3;
+		gbc.gridy=3;	
+		south.add(bplus,gbc);
+
+		gbc.gridx=0;
+		gbc.gridy=4;
+		south.add(bneg,gbc);
+		
+		
+		gbc.gridx=1;
+		gbc.gridy=4;
+		south.add(b0,gbc);
+		
+		gbc.ipadx=87;
+		gbc.gridx=2;
+		gbc.gridy=4;
+		south.add(bdot,gbc);
+		
+		gbc.ipadx=74;
+		gbc.gridx=3;
+		gbc.gridy=4;	
+		south.add(bequals,gbc);
+		
+		
+		
+	}
+
+	void setBorderLayout()
+	{
+		mainpanel.setLayout(bl);
+		mainpanel.add(north,BorderLayout.NORTH);
+		mainpanel.add(center,BorderLayout.CENTER);
+		mainpanel.add(south,BorderLayout.SOUTH);
+
+		//set preferred size
+		north.setPreferredSize(new Dimension(0,50));
+		south.setPreferredSize(new Dimension(0,300));
+		
+		north.setBackground(Color.white);
+		center.setBackground(Color.white);
+		south.setBackground(Color.black);
+
+	}
+
+	void removeBorder()
+	{
+		b0.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		b1.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		b2.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		b3.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		b4.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		b5.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		b6.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		b7.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		b8.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		b9.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		bdot.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		bplus.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		bminus.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		bmul.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		bdiv.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		bC.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		bCE.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		bback.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		bequals.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		bneg.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		tf.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+	}
+
+	void buttonColor()
+	{
+
+		b0.setBackground(new Color(230,230,230));
+        		b0.setForeground(new Color(0,0,0));
+       		b0.setFocusPainted(false);
+		
+		
+		b1.setBackground(new Color(230,230,230));
+        		b1.setForeground(new Color(0,0,0));
+       		b1.setFocusPainted(false);
+
+	
+		b2.setBackground(new Color(230,230,230));
+        		b2.setForeground(new Color(0,0,0));
+       		b2.setFocusPainted(false);
+
+		
+		b3.setBackground(new Color(230,230,230));
+        		b3.setForeground(new Color(0,0,0));
+       		b3.setFocusPainted(false);
+
+		
+		b4.setBackground(new Color(230,230,230));
+        		b4.setForeground(new Color(0,0,0));
+       		b4.setFocusPainted(false);
+
+		
+		b5.setBackground(new Color(230,230,230));
+        		b5.setForeground(new Color(0,0,0));
+       		b5.setFocusPainted(false);
+
+		
+		b6.setBackground(new Color(230,230,230));
+        		b6.setForeground(new Color(0,0,0));
+       		b6.setFocusPainted(false);
+
+		
+		b7.setBackground(new Color(230,230,230));
+        		b7.setForeground(new Color(0,0,0));
+       		b7.setFocusPainted(false);
+
+		
+		b8.setBackground(new Color(230,230,230));
+        		b8.setForeground(new Color(0,0,0));
+       		b8.setFocusPainted(false);
+
+		
+		b9.setBackground(new Color(230,230,230));
+        		b9.setForeground(new Color(0,0,0));
+       		b9.setFocusPainted(false);
+
+		
+		bC.setBackground(new Color(230,230,230));
+        		bC.setForeground(new Color(0,0,0));
+       		bC.setFocusPainted(false);
+
+		
+		bCE.setBackground(new Color(230,230,230));
+        		bCE.setForeground(new Color(0,0,0));
+       		bCE.setFocusPainted(false);
+
+		bback.setBackground(new Color(230,230,230));
+        		bback.setForeground(new Color(0,0,0));
+       		bback.setFocusPainted(false);
+
+		
+		bplus.setBackground(new Color(230,230,230));
+        		bplus.setForeground(new Color(0,0,0));
+       		bplus.setFocusPainted(false);
+
+		
+		bminus.setBackground(new Color(230,230,230));
+        		bminus.setForeground(new Color(0,0,0));
+       		bminus.setFocusPainted(false);
+
+		
+		bmul.setBackground(new Color(230,230,230));
+        		bmul.setForeground(new Color(0,0,0));
+       		bmul.setFocusPainted(false);
+
+		
+		bdiv.setBackground(new Color(230,230,230));
+        		bdiv.setForeground(new Color(0,0,0));
+       		bdiv.setFocusPainted(false);
+		
+		bdot.setBackground(new Color(230,230,230));
+        		bdot.setForeground(new Color(0,0,0));
+       		bdot.setFocusPainted(false);
+
+		bequals.setBackground(new Color(230,230,230));
+        		bequals.setForeground(new Color(0,0,0));
+       		bequals.setFocusPainted(false);
+
+		bneg.setBackground(new Color(230,230,230));
+        		bneg.setForeground(new Color(0,0,0));
+       		bneg.setFocusPainted(false);
+
+	}
+	void addMouseListener()
+	{
+		b0.addMouseListener(this);
+		b1.addMouseListener(this);
+		b2.addMouseListener(this);
+		b3.addMouseListener(this);
+		b4.addMouseListener(this);
+		b5.addMouseListener(this);
+		b6.addMouseListener(this);
+		b7.addMouseListener(this);
+		b8.addMouseListener(this);
+		b9.addMouseListener(this);
+		bplus.addMouseListener(this);
+		bminus.addMouseListener(this);
+		bmul.addMouseListener(this);
+		bdiv.addMouseListener(this);
+		bC.addMouseListener(this);
+		bCE.addMouseListener(this);
+		bback.addMouseListener(this);
+		bneg.addMouseListener(this);
+		bdot.addMouseListener(this);
+		bequals.addMouseListener(this);
+	}
+
+	void addListener()
+	{
+		b1.addActionListener(this);
+		b2.addActionListener(this);
+		b3.addActionListener(this);
+		b4.addActionListener(this);
+		
+		b5.addActionListener(this);
+		b6.addActionListener(this);
+		b7.addActionListener(this);
+		b8.addActionListener(this);
+		
+		
+		b9.addActionListener(this);
+		b0.addActionListener(this);
+		bC.addActionListener(this);
+		bCE.addActionListener(this);
+
+		
+		bplus.addActionListener(this);
+		bminus.addActionListener(this);
+		bmul.addActionListener(this);
+		bdiv.addActionListener(this);
+		
+			
+		bdot.addActionListener(this);
+		bequals.addActionListener(this);
+		bneg.addActionListener(this);
+		bback.addActionListener(this);
+
+		
+
+	}
+
+	public void actionPerformed(ActionEvent ee)	
+	{
+		if(ee.getSource()==b0)
+		{
+			str=tf.getText();
+			tf.setText(str+"0");
+		}
+				
+		if(ee.getSource()==b1)
+		{
+			str=tf.getText();
+			tf.setText(str+"1");
+			
+		}
+		if(ee.getSource()==b2)
+		{
+			str=tf.getText();
+			tf.setText(str+"2");
+			
+		}
+		if(ee.getSource()==b3)
+		{
+			str=tf.getText();
+			tf.setText(str+"3");
+			
+		}
+		if(ee.getSource()==b4)
+		{
+			str=tf.getText();
+			tf.setText(str+"4");
+			
+		}
+		if(ee.getSource()==b5)
+		{
+			str=tf.getText();
+			tf.setText(str+"5");
+			
+		}
+		if(ee.getSource()==b6)
+		{
+			str=tf.getText();
+			tf.setText(str+"6");
+			
+		}
+		if(ee.getSource()==b7)
+		{
+			str=tf.getText();
+			tf.setText(str+"7");
+			
+		}
+		if(ee.getSource()==b8)
+		{
+			str=tf.getText();
+			tf.setText(str+"8");
+			
+		}
+
+		if(ee.getSource()==b9)
+		{
+			str=tf.getText();
+			tf.setText(str+"9");
+			
+		}
+		if(ee.getSource()==bdot)
+		{
+			str=tf.getText();
+			tf.setText(str+".");
+			
+		}
+		 if(ee.getSource()==bplus)
+        		{
+           			a=Double.parseDouble(tf.getText());
+            			operation=1;
+            			tf.setText("");
+        		} 
+		if(ee.getSource()==bminus)
+		{
+			a=Double.parseDouble(tf.getText());
+			operation=2;
+			tf.setText("");			
+			
+		}
+		if(ee.getSource()==bmul)
+		{
+			a=Double.parseDouble(tf.getText());
+			operation=3;
+			tf.setText("");
+			
+		}
+		if(ee.getSource()==bdiv)
+		{
+			a=Double.parseDouble(tf.getText());
+			operation=4;
+			tf.setText("");
+			
+		}
+			
+		 if(ee.getSource()==bequals)
+        		{
+            			b=Double.parseDouble(tf.getText());
+        
+            			switch(operation)
+            			{
+                			case 1: answer=a+b;
+                    			break;
+        
+                			case 2: answer=a-b;
+                    			break;
+        
+                			case 3: answer=a*b;
+                    			break;
+        
+                			case 4: answer=a/b;
+                    			break;
+        
+                			default: answer=0;
+            			}
+        
+            				//tf.setText(""+answer);
+			
+			
+      			String ans = String.valueOf(answer);
+			int val=ans.indexOf(".");
+		
+			int mylen=ans.length();
+				
+			String strstart=ans.substring(0,val);
+			tf.setText(strstart);
+				
+			String strlast=ans.substring(val,mylen);
+			System.out.println(strlast);
+       		}
+
+		if(ee.getSource()==bC)
+		{
+           		 	tf.setText("");
+		}
+		if(ee.getSource()==bCE)
+		{
+           		 	tf.setText("");
+		}
+		if(ee.getSource()==bback)
+		{
+			String str=tf.getText();
+			int strlen=str.length();
+			String substr=str.substring(0,strlen-1);
+			tf.setText(substr);
+		}
+		
+
+	}
+
+	 public void mouseClicked(MouseEvent e) 
+	   {  
+         		 
+     }  
+ 	
+    	public void mouseEntered(MouseEvent e) 
+	    {  
+			
+      }  
+
+    	public void mouseExited(MouseEvent e) 
+	    {  
+        			 	
+      }  
+
+    	public void mousePressed(MouseEvent e) 
+	    {  
+        		
+    	}  	
+
+    	public void mouseReleased(MouseEvent e) 
+	    {  
+        	  
+  	  }
+
+	public static void main(String sd[])
+	{
+		new GridBagTask();
+	}
+}
